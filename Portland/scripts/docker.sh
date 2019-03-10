@@ -23,21 +23,15 @@ fi
 # Ensure docker service is stopped
 systemctl stop docker
 
-# Change Dockers Storage to ZFS Pool
-mkdir /etc/systemd/system/docker.service.d
-touch /etc/systemd/system/docker.service.d/docker.conf
-cat << EOF > /etc/systemd/system/docker.service.d/docker.conf
-    [Service]
-    ExecStart=
-    ExecStart=/usr/bin/dockerd --graph=/tank/docker --storage-driver=zfs
-EOF
-
-# Enable ipv6 (change the ipvx cidr to a unique private subnet)
+# Set Docker Daemon Settings
 cat << EOF >> /etc/docker/daemon.json
-    {
-        "ipv6": true,
-        "fixed-cidr-v6": "2001:db8:1::/64"
-    }
+{
+	"storage-driver": "zfs",
+	"data-root": "/tank/docker",
+	"userns-remap": "default",
+	"ipv6": true,
+	"fixed-cidr-v6": "2001:db8:1::/64"
+}
 EOF
 
 # Start and Enable docker service
