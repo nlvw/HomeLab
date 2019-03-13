@@ -5,6 +5,7 @@
 # Stand Up New container
 docker run -d  \
 	--name watchtower \
+	--userns host \
 	--restart="unless-stopped" \
 	--mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
 	v2tec/watchtower:latest --schedule="0 2 * * *" --cleanup
